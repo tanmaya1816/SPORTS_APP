@@ -1,0 +1,147 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="row rounded d-flex justify-content-center">
+            <div class="col-md-8 col-sm-12 shadow-lg p-5 bg-light">
+                <div class="row list-header">
+                    <div class="col-xs-12 col-md-4">
+                        <h2 style="margin-top: 7%;margin-left: 4%;">Items List</h2>
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <div fxLayout fxLayoutAlign="center center">
+                            <mat-form-field style="margin-top: 2%;" appearance="outline" fxFlex="40%">
+                                <input matInput type="text" (keyup)="doFilter($event)" placeholder="Filter">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Code </th>
+                        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+                        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="color">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
+                        <td mat-cell *matCellDef="let element"> {{element.color}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="size">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Size </th>
+                        <td mat-cell *matCellDef="let element"> {{element.size}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="update">
+                        <th mat-header-cell *matHeaderCellDef> Update </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="accent" (click)="redirectToUpdate(element)">
+                                <mat-icon class="mat-18">system_update</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef> Delete </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="warn" (click)="deleteProduct(element.id)">
+                                <mat-icon class="mat-18">delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 50, 100]">
+                </mat-paginator>
+            </div>
+
+            <div class="col-md-4 col-sm-12 shadow-lg p-5 bg-light">
+                <div class="text-center">
+                    <h2 class="text-primary">{{isUpdate ? "Update a " : "Add new "}} Item</h2>
+                </div>
+                <form [formGroup]="itemForm">
+                    <div class="p-4 text-center">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary"><i
+                                            class="bi bi-person-plus-fill text-white"></i></span>
+                                    <input type="text" class="form-control" placeholder="Item name"
+                                        formControlName="name">
+                                </div>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'name','required')">Enter item name</p>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'name','pattern')">Enter valid item name
+                                </p>
+                            </div>
+                            <!-- <div class="col-xs-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary"><i
+                                            class="bi bi-key-fill text-white"></i></span>
+                                    <input type="text" class="form-control" placeholder="Item Code"
+                                        formControlName="code">
+                                </div>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'code','required')">Enter item code</p>
+                                
+                            </div> -->
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary"><i
+                                            class="bi bi-key-fill text-white"></i></span>
+                                    <input type="number" class="form-control" placeholder="Price"
+                                        formControlName="price">
+                                </div>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'price','required')">Enter item price</p>
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary"><i
+                                            class="bi bi-key-fill text-white"></i></span>
+                                    <input type="text" class="form-control" placeholder="Color"
+                                        formControlName="color">
+                                </div>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'color','required')">Enter a color</p>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'color','pattern')">Enter valid color
+                                </p>
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary"><i
+                                            class="bi bi-key-fill text-white"></i></span>
+                                    <input type="text" class="form-control" placeholder="Size"
+                                        formControlName="size">
+                                </div>
+                                <p class="error-text" *ngIf="isInvalid(itemForm,'size','required')">Enter item size</p>
+                                
+                            </div>
+                        </div>
+                        <button *ngIf="!isUpdate" [disabled]="itemForm.status == 'INVALID'" class="btn btn-primary text-center mt-2"
+                            type="submit" (click)="addProduct()">
+                            ADD
+                        </button>
+                        <button *ngIf="isUpdate" class="btn btn-danger text-center mt-2" style="margin-right: 3%;"
+                            type="submit" (click)="addNew()">
+                            Cancel
+                        </button>
+                        <button *ngIf="isUpdate" [disabled]="itemForm.status == 'INVALID'" class="btn btn-primary text-center mt-2"
+                            type="submit" (click)="updateProduct()">
+                            Update
+                        </button>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+.card-box{
+    width: 250px;
+    background: #0e9ab7;
+    padding: 3%;
+    color: white;
+    min-height: 150px;
+    text-align: center;
+}
+.card-title{
+    font: revert;
+    margin-top: 10%;
+}
+.card-count{
+    font-size: 40px;
+    font-weight: 600;
+}
